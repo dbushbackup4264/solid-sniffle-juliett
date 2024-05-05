@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+
+    <!-- BS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Resume Builder Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="styles/style.css">
+
+    <!-- import Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+     <!-- nav bar -->
+     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand" >Resume Builder Assistant</a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" target="_blank" href="https://github.com/devan4264/super-duper-juliett">Code Repository</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fdevan4264.github.io%2Fsuper-duper-juliett%2F" target="_blank">Nu Validator</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- information prompts -->
+    <div class="container">
+        <h1 class="mt-5">After reading the README, please fill out the information below</h1>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Personal Information</h5>
+                <form id="resumeForm">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone:</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="linkedIn" class="form-label">LinkedIn:</label>
+                        <input type="text" class="form-control" id="linkedIn" name="linkedIn">
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" id="addEducation">Add Education</button>
+                    <button type="button" class="btn btn-primary" id="addExperience">Add Experience</button>
+                    <button type="button" class="btn btn-primary" id="addSkill">Add Skill</button>
+
+                    <button type="submit" class="btn btn-primary">Generate Resume</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Education</h5>
+                <div id="educationFields"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Experience</h5>
+                <div id="experienceFields"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Skills</h5>
+                <div id="skillsFields"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- inline scripts -->
+    <!-- if this remains, I ran out of time. Apologies-->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resumeForm = document.getElementById('resumeForm');
+            const educationFields = document.getElementById('educationFields');
+            const experienceFields = document.getElementById('experienceFields');
+            const skillsFields = document.getElementById('skillsFields');
+
+            // Function to create input fields for education, experience, and skills
+            function createInputField(labelText, inputType, container) {
+                const label = document.createElement('label');
+                label.textContent = labelText + ':';
+                const input = document.createElement('input');
+                input.type = inputType;
+                input.required = true;
+                const br = document.createElement('br');
+                container.appendChild(label);
+                container.appendChild(input);
+                container.appendChild(br);
+            }
+
+            // event listeners
+            // education fields
+            document.getElementById('addEducation').addEventListener('click', function() {
+                createInputField('Degree', 'text', educationFields);
+                createInputField('University', 'text', educationFields);
+                createInputField('Start Year', 'number', educationFields);
+                createInputField('End Year', 'number', educationFields);
+                createInputField('GPA', 'number', educationFields);
+            });
+
+            // experience fields
+            document.getElementById('addExperience').addEventListener('click', function() {
+                createInputField('Position', 'text', experienceFields);
+                createInputField('Company', 'text', experienceFields);
+                createInputField('Duration', 'text', experienceFields);
+                createInputField('Description', 'text', experienceFields);
+            });
+
+            // skills fields
+            document.getElementById('addSkill').addEventListener('click', function() {
+                createInputField('Skill', 'text', skillsFields);
+            });
+
+            // form submission
+            resumeForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const resume = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    linkedIn: document.getElementById('linkedIn').value,
+                    education: [],
+                    experience: [],
+                    skills: []
+                };
+
+                // export education information
+                const educationInputs = educationFields.querySelectorAll('input');
+                for (let i = 0; i < educationInputs.length; i += 5) {
+                    resume.education.push({
+                        degree: educationInputs[i].value,
+                        university: educationInputs[i + 1].value,
+                        startYear: educationInputs[i + 2].value,
+                        endYear: educationInputs[i + 3].value,
+                        gpa: educationInputs[i + 4].value
+                    });
+                }
+
+                // export experience information
+                const experienceInputs = experienceFields.querySelectorAll('input');
+                for (let i = 0; i < experienceInputs.length; i += 4) {
+                    resume.experience.push({
+                        position: experienceInputs[i].value,
+                        company: experienceInputs[i + 1].value,
+                        duration: experienceInputs[i + 2].value,
+                        description: experienceInputs[i + 3].value
+                    });
+                }
+
+                // export skills information
+                const skillInputs = skillsFields.querySelectorAll('input');
+                for (let i = 0; i < skillInputs.length; i++) {
+                    resume.skills.push(skillInputs[i].value);
+                }
+
+                // convert info into resume.json
+                const resumeJson = JSON.stringify(resume, null, 2);
+                const blob = new Blob([resumeJson], { type: 'application/json' });
+
+                // create downloadable json file
+                const downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = 'resume.json';
+
+                // trigger the download
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            });
+        });
+    </script>
+
+<!-- more dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="styles/style.css"></script>
+<script src="scripts/script.js"></script>
+
+</body>
+</html>
